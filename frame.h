@@ -8,6 +8,8 @@
 #include <QMouseEvent>
 #include <cmath>
 #include <QMouseEvent>
+#include "nvector.h"
+#include "NMatrix.h"
 
 namespace Ui {
 class Frame;
@@ -28,11 +30,14 @@ public:
     double lastX, lastY;
     bool visible;
     QPen pen;
+    NVector Scale;
+    NVector toMove;
+
+
 
 
 private:
     Ui::Frame *ui;
-
 
 protected:
     void paintEvent(QPaintEvent*);
@@ -41,6 +46,11 @@ protected:
 private slots:
     void on_exitButton_clicked();
     void on_checkBox_toggled(bool checked);
+    void on_ScaleX_valueChanged(int arg1);
+    void on_ScaleY_valueChanged(int arg1);
+    void on_ScaleZ_valueChanged(int arg1);
+    void on_LeftRight_sliderMoved(int position);
+    void on_UpDown_sliderMoved(int position);
 };
 
 #endif // FRAME_H

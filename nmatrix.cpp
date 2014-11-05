@@ -52,17 +52,17 @@ void NMatrix::RotateYZ(double beta) {
     data[2][2] = cos(beta);
 }
 
-void NMatrix::SetScale(double K) {
-    data[0][0] = K;
-    data[1][1] = K;
-    data[2][2] = K;
+void NMatrix::SetScale(double K, const NVector Scale) {
+    data[0][0] = K * Scale.x;
+    data[1][1] = K * Scale.y;
+    data[2][2] = K * Scale.z;
 }
 
-void NMatrix::Move(const NVector toMove) {
-    data[0][3] = toMove.x;
-    data[1][3] = toMove.y;
+/*void NMatrix::Move(const NVector toMove) {
+    data[0][0] = toMove.x;
+    data[1][1] = toMove.y;
     data[2][3] = toMove.z;
-}
+}*/
 
 
 void NMatrix::RotateAll(double alpha, double beta) { // double c);

@@ -30,3 +30,8 @@ void NVector::operator=(const NVector v) {
     x = v.x; y = v.y; z = v.z; t = v.t;
 }
 
+
+void NVector::Move(const NVector toMove) {
+    x += toMove.x;
+    y += toMove.y;
+}

@@ -11,6 +11,7 @@ Frame::Frame(QWidget *parent) :
     alpha(45), beta(0),
     lastX(0), lastY(0),
     visible(false),
+    Scale(1), toMove(0),
     ui(new Ui::Frame)
 {
     ui->setupUi(this);
@@ -48,12 +49,10 @@ double ScalarComposition(const NVector a, const NVector b) {
 void Frame::paintEvent(QPaintEvent*)
 {
 
-    double max = std::max(h_figure, r_figure);
+    double max = std::max(1.5 * h_figure * Scale.z, std::max(1.5 * r_figure * Scale.y, 1.5 * r_figure * Scale.x));
     double Ky = height()/(2 * max);
     double Kx = (width())/(2 * max);
     double K = std::min(Kx, Ky);
-
-
 
     QPainter painter(this);
 
@@ -65,7 +64,7 @@ void Frame::paintEvent(QPaintEvent*)
     QVector <NVector> points;
 
     double w  = width() / 2.0;
-    double h = height() / 2.0;
+    double h = height() / 2.0 + 30;
 
     NMatrix XZMatrix = NMatrix();
     NMatrix YZMatrix = NMatrix();
@@ -77,16 +76,16 @@ void Frame::paintEvent(QPaintEvent*)
 
     XZMatrix.RotateXZ(beta);
     YZMatrix.RotateYZ(alpha);
-    SMatrix.SetScale(K);
+    SMatrix.SetScale(K, Scale);
 
     ResMatrix = XZMatrix * YZMatrix * SMatrix;
 
     double step = pi / 5;
     for(double phi = 0; phi < 2 * pi; phi += step) {
-         points.push_back(ResMatrix * figurePoint(phi, r_figure, -h_figure / 2));
-         points.push_back(ResMatrix * figurePoint(phi + step, r_figure, -h_figure / 2));
-         points.push_back(ResMatrix * figurePoint(phi + step, r_figure, h_figure / 2));
-         points.push_back(ResMatrix * figurePoint(phi, r_figure, h_figure / 2));
+         points.push_back(ResMatrix * figurePoint(phi, r_figure, -h_figure / 2) + ToCenter + toMove);
+         points.push_back(ResMatrix * figurePoint(phi + step, r_figure, -h_figure / 2) + ToCenter + toMove);
+         points.push_back(ResMatrix * figurePoint(phi + step, r_figure, h_figure / 2) + ToCenter + toMove);
+         points.push_back(ResMatrix * figurePoint(phi, r_figure, h_figure / 2) + ToCenter + toMove);
     }
 
     int size = points.size();
@@ -110,29 +109,29 @@ void Frame::paintEvent(QPaintEvent*)
         n = VectorComposition(a, b);
 
         if(ScalarComposition(n, k) >= 0) {
-            painter.drawLine(points[i].x + w, points[i].y + h, points[i + 1].x + w, points[i + 1].y + h);
-            painter.drawLine(points[i + 1].x + w, points[i + 1].y + h, points[i + 2].x + w, points[i + 2].y + h);
-            painter.drawLine(points[i + 2].x + w, points[i + 2].y + h, points[i + 3].x + w, points[i + 3].y + h);
-            painter.drawLine(points[i + 3].x + w, points[i + 3].y + h, points[i].x + w, points[i].y + h);
+            painter.drawLine(points[i].x, points[i].y, points[i + 1].x, points[i + 1].y);
+            painter.drawLine(points[i + 1].x, points[i + 1].y, points[i + 2].x, points[i + 2].y);
+            painter.drawLine(points[i + 2].x, points[i + 2].y, points[i + 3].x, points[i + 3].y);
+            painter.drawLine(points[i + 3].x, points[i + 3].y, points[i].x, points[i].y);
         }
         else if(visible) {
             pen.setColor(Qt::darkGray);
             pen.setWidth(1);
             pen.setStyle(Qt::DashLine);
             painter.setPen(pen);
-            painter.drawLine(points[i].x + w, points[i].y + h, points[i + 1].x + w, points[i + 1].y + h);
-            painter.drawLine(points[i + 1].x + w, points[i + 1].y + h, points[i + 2].x + w, points[i + 2].y + h);
-            painter.drawLine(points[i + 2].x + w, points[i + 2].y + h, points[i + 3].x + w, points[i + 3].y + h);
-            painter.drawLine(points[i + 3].x + w, points[i + 3].y + h, points[i].x + w, points[i].y + h);
+            painter.drawLine(points[i].x, points[i].y, points[i + 1].x, points[i + 1].y);
+            painter.drawLine(points[i + 1].x, points[i + 1].y, points[i + 2].x, points[i + 2].y);
+            painter.drawLine(points[i + 2].x, points[i + 2].y, points[i + 3].x, points[i + 3].y);
+            painter.drawLine(points[i + 3].x, points[i + 3].y, points[i].x, points[i].y);
         }
         pen.setColor(Qt::black);
         pen.setWidth(3);
         pen.setStyle(Qt::SolidLine);
         painter.setPen(pen);
         if(bottom)
-            painter.drawLine(points[i].x + w, points[i].y + h, points[i + 1].x + w, points[i + 1].y + h);
+            painter.drawLine(points[i].x, points[i].y, points[i + 1].x, points[i + 1].y);
         if(top)
-            painter.drawLine(points[i + 2].x + w, points[i + 2].y + h, points[i + 3].x + w, points[i + 3].y + h);
+            painter.drawLine(points[i + 2].x, points[i + 2].y, points[i + 3].x, points[i + 3].y);
     }
 }
 
@@ -160,5 +159,36 @@ void Frame::on_checkBox_toggled(bool checked) {
     if(checked)
         visible = true;
     else visible = false;
+    repaint();
+}
+
+void Frame::on_ScaleX_valueChanged(int arg1)
+{
+    Scale.x = (double)arg1;
+    repaint();
+}
+
+void Frame::on_ScaleY_valueChanged(int arg1)
+{
+    Scale.y = (double)arg1;
+    repaint();
+}
+
+void Frame::on_ScaleZ_valueChanged(int arg1)
+{
+    Scale.z = (double)arg1;
+    repaint();
+}
+
+void Frame::on_LeftRight_sliderMoved(int position)
+{
+    toMove.x = (double)position;
+    repaint();
+}
+
+
+void Frame::on_UpDown_sliderMoved(int position)
+{
+    toMove.y = (double)position;
     repaint();
 }

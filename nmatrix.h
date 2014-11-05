@@ -13,8 +13,8 @@ public:
     //void RotateXY(double alpha);
     void RotateXZ(double alpha);
     void RotateYZ(double beta);
-    void SetScale(double scale);
-    void Move(NVector toMove);
+    void SetScale(double scale, const NVector Scale);
+   // void Move(NVector toMove);
 
     void RotateAll(double alpha, double beta); // double c);
 
