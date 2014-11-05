@@ -101,6 +101,31 @@ void Frame::paintEvent(QPaintEvent*) {
     int size = points.size();
 
     for (int i = 0; i < size; i++) {
+
+        if(perspectiveView) {
+            points[i].x *= Scale.x;
+            points[i].y *= Scale.y;
+            points[i].z *= Scale.z;
+            points[i] = ResMatrix * points[i];
+
+            points[i] = toCheck * points[i];
+            points[i].x = points[i].x / points[i].t;
+            points[i].y = points[i].y / points[i].t;
+
+            points[i].x *= K;
+            points[i].y *= K;
+            points[i].z *= K;
+        }
+        else {
+             points[i] = SMatrix * points[i];
+             points[i] = ResMatrix * points[i];
+        }
+
+        points[i] = points[i] + ToCenter;
+        points[i] = points[i] + toMove;
+}
+
+    /*for (int i = 0; i < size; i++) {
         // Res * S * d = ok
         // S * Res * d != ok
         if(perspectiveView) {
@@ -121,7 +146,7 @@ void Frame::paintEvent(QPaintEvent*) {
 
         points[i] = points[i] + ToCenter;
         points[i] = points[i] + toMove;
-}
+} */
 
     n = VectorComposition(points[5] - points[4], points[1] - points[0]);
     if(ScalarComposition(n, k) >= 0)
