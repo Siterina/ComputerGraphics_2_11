@@ -4,16 +4,13 @@
 class NVector
 {
 public:
-    double x, y, z, t;
+    double x, y, z;
     NVector();
     NVector(double fill);
     NVector operator+(const NVector v);
     NVector operator-(const NVector v);
     void operator=(const NVector v);
     void Move(const NVector toMove);
-
-   // NVector VectorComposition(const NVector a, const NVector b);
-   // double ScalarComposition(const NVector a, const NVector b);
 };
 
 #endif // NVECTOR_H

@@ -8,17 +8,15 @@
 Frame::Frame(QWidget *parent) :
     QWidget(parent),
     h_figure(4), r_figure(2),
-    alpha(45), beta(0),
+    alpha(30), beta(0),
     lastX(0), lastY(0),
-    visible(false),
+    visible(false), axleVisible(false),
     Scale(1), toMove(0),
-    ui(new Ui::Frame)
-{
+    ui(new Ui::Frame) {
     ui->setupUi(this);
 }
 
-Frame::~Frame()
-{
+Frame::~Frame() {
     delete ui;
 }
 
@@ -27,7 +25,6 @@ NVector figurePoint(double phi, double r_figure, double h_figure) {
     result.x = r_figure * cos(phi);
     result.y = r_figure * sin(phi);
     result.z = h_figure;
-    result.t = 0;
     return result;
 }
 
@@ -45,16 +42,28 @@ double ScalarComposition(const NVector a, const NVector b) {
     return result;
 }
 
-
-void Frame::paintEvent(QPaintEvent*)
-{
+void Frame::paintEvent(QPaintEvent*) {
 
     double max = std::max(1.5 * h_figure * Scale.z, std::max(1.5 * r_figure * Scale.y, 1.5 * r_figure * Scale.x));
     double Ky = height()/(2 * max);
     double Kx = (width())/(2 * max);
     double K = std::min(Kx, Ky);
 
+    double w  = width() / 2.0;
+    double h = height() / 2.0 + 30;
+
     QPainter painter(this);
+
+    if(axleVisible) {
+        pen.setColor(Qt::darkMagenta);
+        pen.setWidth(2);
+        pen.setStyle(Qt::SolidLine);
+        painter.setPen(pen);
+        painter.drawLine(w, h, (2 * w - 20), h);
+        painter.drawLine(w, h, 20, height() - h / 8);
+        painter.drawLine(w, h, w, 60);
+    }
+
 
     pen.setColor(Qt::black);
     pen.setWidth(3);
@@ -63,22 +72,16 @@ void Frame::paintEvent(QPaintEvent*)
 
     QVector <NVector> points;
 
-    double w  = width() / 2.0;
-    double h = height() / 2.0 + 30;
-
-    NMatrix XZMatrix = NMatrix();
-    NMatrix YZMatrix = NMatrix();
     NMatrix SMatrix  = NMatrix();
     NMatrix ResMatrix = NMatrix();
     NVector ToCenter = NVector();
     ToCenter.x = w;
     ToCenter.y = h;
 
-    XZMatrix.RotateXZ(beta);
-    YZMatrix.RotateYZ(alpha);
     SMatrix.SetScale(K, Scale);
+    ResMatrix.RotateAll(beta, alpha);
 
-    ResMatrix = XZMatrix * YZMatrix * SMatrix;
+    ResMatrix = ResMatrix * SMatrix;
 
     double step = pi / 5;
     for(double phi = 0; phi < 2 * pi; phi += step) {
@@ -149,11 +152,9 @@ void Frame::mouseMoveEvent(QMouseEvent *mEvent) {
     repaint();
 }
 
-
 void Frame::on_exitButton_clicked() {
     close();
 }
-
 
 void Frame::on_checkBox_toggled(bool checked) {
     if(checked)
@@ -162,33 +163,35 @@ void Frame::on_checkBox_toggled(bool checked) {
     repaint();
 }
 
-void Frame::on_ScaleX_valueChanged(int arg1)
-{
+void Frame::on_ScaleX_valueChanged(int arg1) {
     Scale.x = (double)arg1;
     repaint();
 }
 
-void Frame::on_ScaleY_valueChanged(int arg1)
-{
+void Frame::on_ScaleY_valueChanged(int arg1) {
     Scale.y = (double)arg1;
     repaint();
 }
 
-void Frame::on_ScaleZ_valueChanged(int arg1)
-{
+void Frame::on_ScaleZ_valueChanged(int arg1) {
     Scale.z = (double)arg1;
     repaint();
 }
 
-void Frame::on_LeftRight_sliderMoved(int position)
-{
+void Frame::on_LeftRight_sliderMoved(int position) {
     toMove.x = (double)position;
     repaint();
 }
 
-
-void Frame::on_UpDown_sliderMoved(int position)
-{
+void Frame::on_UpDown_sliderMoved(int position) {
     toMove.y = (double)position;
+    repaint();
+}
+
+void Frame::on_axleVisible_toggled(bool checked)
+{
+    if(checked)
+        axleVisible = true;
+    else axleVisible = false;
     repaint();
 }

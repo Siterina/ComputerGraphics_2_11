@@ -29,6 +29,7 @@ public:
     double beta;
     double lastX, lastY;
     bool visible;
+    bool axleVisible;
     QPen pen;
     NVector Scale;
     NVector toMove;
@@ -51,6 +52,7 @@ private slots:
     void on_ScaleZ_valueChanged(int arg1);
     void on_LeftRight_sliderMoved(int position);
     void on_UpDown_sliderMoved(int position);
+    void on_axleVisible_toggled(bool checked);
 };
 
 #endif // FRAME_H
