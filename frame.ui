@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
+    <width>408</width>
     <height>427</height>
    </rect>
   </property>
@@ -19,49 +19,7 @@
    </property>
    <item row="0" column="1">
     <layout class="QGridLayout" name="gridLayout_2">
-     <item row="1" column="3">
-      <widget class="QCheckBox" name="axleVisible">
-       <property name="text">
-        <string>axle</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="4">
-      <widget class="QPushButton" name="exitButton">
-       <property name="text">
-        <string>exit</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="3">
-      <widget class="QSpinBox" name="ScaleZ">
-       <property name="minimum">
-        <number>1</number>
-       </property>
-      </widget>
-     </item>
      <item row="1" column="2">
-      <widget class="QSpinBox" name="ScaleY">
-       <property name="minimum">
-        <number>1</number>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="4">
-      <widget class="QCheckBox" name="checkBox">
-       <property name="text">
-        <string>visible</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="2">
-      <widget class="QSpinBox" name="ScaleX">
-       <property name="minimum">
-        <number>1</number>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
       <widget class="QSlider" name="UpDown">
        <property name="minimumSize">
         <size>
@@ -86,7 +44,7 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="1">
+     <item row="0" column="2">
       <widget class="QSlider" name="LeftRight">
        <property name="minimumSize">
         <size>
@@ -123,6 +81,55 @@
         </size>
        </property>
       </spacer>
+     </item>
+     <item row="0" column="4">
+      <widget class="QSpinBox" name="ScaleX">
+       <property name="minimum">
+        <number>1</number>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="4">
+      <widget class="QSpinBox" name="ScaleY">
+       <property name="minimum">
+        <number>1</number>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="4">
+      <widget class="QSpinBox" name="ScaleZ">
+       <property name="minimum">
+        <number>1</number>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="5">
+      <widget class="QCheckBox" name="axleVisible">
+       <property name="text">
+        <string>axle</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="5">
+      <widget class="QCheckBox" name="perspectiveView">
+       <property name="text">
+        <string>perspective</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="5">
+      <widget class="QCheckBox" name="checkBox">
+       <property name="text">
+        <string>visible</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="5">
+      <widget class="QPushButton" name="exitButton">
+       <property name="text">
+        <string>exit</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>

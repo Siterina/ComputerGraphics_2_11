@@ -58,14 +58,8 @@ void NMatrix::SetScale(double K, const NVector Scale) {
     data[2][2] = K * Scale.z;
 }
 
-/*void NMatrix::Move(const NVector toMove) {
-    data[0][0] = toMove.x;
-    data[1][1] = toMove.y;
-    data[2][3] = toMove.z;
-}*/
 
-
-void NMatrix::RotateAll(double alpha, double beta) { // double c);
+void NMatrix::RotateAll(double alpha, double beta) {
     NMatrix result = NMatrix();
     NMatrix XZ = NMatrix();
     NMatrix YZ = NMatrix();

@@ -11,6 +11,7 @@ Frame::Frame(QWidget *parent) :
     alpha(30), beta(0),
     lastX(0), lastY(0),
     visible(false), axleVisible(false),
+    perspectiveView(false),
     Scale(1), toMove(0),
     ui(new Ui::Frame) {
     ui->setupUi(this);
@@ -48,9 +49,11 @@ void Frame::paintEvent(QPaintEvent*) {
     double Ky = height()/(2 * max);
     double Kx = (width())/(2 * max);
     double K = std::min(Kx, Ky);
-
     double w  = width() / 2.0;
     double h = height() / 2.0 + 30;
+    bool bottom = false;
+    bool top = false;
+
 
     QPainter painter(this);
 
@@ -64,7 +67,6 @@ void Frame::paintEvent(QPaintEvent*) {
         painter.drawLine(w, h, w, 60);
     }
 
-
     pen.setColor(Qt::black);
     pen.setWidth(3);
     pen.setStyle(Qt::SolidLine);
@@ -75,8 +77,15 @@ void Frame::paintEvent(QPaintEvent*) {
     NMatrix SMatrix  = NMatrix();
     NMatrix ResMatrix = NMatrix();
     NVector ToCenter = NVector();
+    NVector a = NVector();
+    NVector b = NVector();
+    NVector n = NVector();
+    NVector k = NVector();
+    NMatrix toCheck = NMatrix();
     ToCenter.x = w;
     ToCenter.y = h;
+    toCheck.data[3][2] = 0.07;
+    k.z = -1;
 
     SMatrix.SetScale(K, Scale);
     ResMatrix.RotateAll(beta, alpha);
@@ -90,29 +99,30 @@ void Frame::paintEvent(QPaintEvent*) {
     }
 
     int size = points.size();
-    NVector a = NVector();
-    NVector b = NVector();
-    NVector n = NVector();
-    NVector k = NVector();
-    k.z = -1;
-
-    NMatrix toCheck = NMatrix();
-    toCheck.data[3][2] = 0.08;
 
     for (int i = 0; i < size; i++) {
+        // Res * S * d = ok
+        // S * Res * d != ok
+        if(perspectiveView) {
+            points[i] = ResMatrix * points[i];
 
-        points[i] = ResMatrix * points[i];
+            points[i] = toCheck * points[i];
+            points[i].x = points[i].x / points[i].t;
+            points[i].y = points[i].y / points[i].t;
 
-        points[i] = toCheck * points[i];
-        points[i].x = points[i].x / points[i].t;
-        points[i].y = points[i].y / points[i].t;
+            points[i].x *= K;
+            points[i].y *= K;
+            points[i].z *= K;
+        }
+        else {
+             points[i] = SMatrix * points[i];
+             points[i] = ResMatrix * points[i];
+        }
 
-        points[i] = SMatrix * points[i];
         points[i] = points[i] + ToCenter;
+        points[i] = points[i] + toMove;
 }
 
-    bool bottom = false;
-    bool top = false;
     n = VectorComposition(points[5] - points[4], points[1] - points[0]);
     if(ScalarComposition(n, k) >= 0)
             bottom = true;
@@ -201,10 +211,16 @@ void Frame::on_UpDown_sliderMoved(int position) {
     repaint();
 }
 
-void Frame::on_axleVisible_toggled(bool checked)
-{
+void Frame::on_axleVisible_toggled(bool checked) {
     if(checked)
         axleVisible = true;
     else axleVisible = false;
+    repaint();
+}
+
+void Frame::on_perspectiveView_toggled(bool checked) {
+    if(checked)
+        perspectiveView = true;
+    else perspectiveView = false;
     repaint();
 }

@@ -10,13 +10,10 @@ public:
 
     double data[4][4];
 
-    //void RotateXY(double alpha);
     void RotateXZ(double alpha);
     void RotateYZ(double beta);
     void SetScale(double scale, const NVector Scale);
-   // void Move(NVector toMove);
-
-    void RotateAll(double alpha, double beta); // double c);
+    void RotateAll(double alpha, double beta);
 
     NMatrix();
     NMatrix(double fill);
