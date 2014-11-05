@@ -8,14 +8,15 @@ class NMatrix
 public:
 
 
-    double data[3][3];
+    double data[4][4];
 
     //void RotateXY(double alpha);
     void RotateXZ(double alpha);
     void RotateYZ(double beta);
     void SetScale(double scale, const NVector Scale);
+   // void Move(NVector toMove);
 
-    void RotateAll(double alpha, double beta);
+    void RotateAll(double alpha, double beta); // double c);
 
     NMatrix();
     NMatrix(double fill);

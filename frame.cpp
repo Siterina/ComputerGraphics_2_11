@@ -81,14 +81,12 @@ void Frame::paintEvent(QPaintEvent*) {
     SMatrix.SetScale(K, Scale);
     ResMatrix.RotateAll(beta, alpha);
 
-    ResMatrix = ResMatrix * SMatrix;
-
     double step = pi / 5;
     for(double phi = 0; phi < 2 * pi; phi += step) {
-         points.push_back(ResMatrix * figurePoint(phi, r_figure, -h_figure / 2) + ToCenter + toMove);
-         points.push_back(ResMatrix * figurePoint(phi + step, r_figure, -h_figure / 2) + ToCenter + toMove);
-         points.push_back(ResMatrix * figurePoint(phi + step, r_figure, h_figure / 2) + ToCenter + toMove);
-         points.push_back(ResMatrix * figurePoint(phi, r_figure, h_figure / 2) + ToCenter + toMove);
+         points.push_back(figurePoint(phi, r_figure, -h_figure / 2));
+         points.push_back(figurePoint(phi + step, r_figure, -h_figure / 2));
+         points.push_back(figurePoint(phi + step, r_figure, h_figure / 2));
+         points.push_back(figurePoint(phi, r_figure, h_figure / 2));
     }
 
     int size = points.size();
@@ -97,6 +95,22 @@ void Frame::paintEvent(QPaintEvent*) {
     NVector n = NVector();
     NVector k = NVector();
     k.z = -1;
+
+    NMatrix toCheck = NMatrix();
+    toCheck.data[3][2] = 0.08;
+
+    for (int i = 0; i < size; i++) {
+
+        points[i] = ResMatrix * points[i];
+
+        points[i] = toCheck * points[i];
+        points[i].x = points[i].x / points[i].t;
+        points[i].y = points[i].y / points[i].t;
+
+        points[i] = SMatrix * points[i];
+        points[i] = points[i] + ToCenter;
+}
+
     bool bottom = false;
     bool top = false;
     n = VectorComposition(points[5] - points[4], points[1] - points[0]);
@@ -105,7 +119,6 @@ void Frame::paintEvent(QPaintEvent*) {
     n = VectorComposition(points[3] - points[2], points[7] - points[6]);
     if(ScalarComposition(n, k) >= 0)
             top = true;
-
     for (int i = 0; i < size; i += 4) {
         a = points[i + 1] - points[i];
         b = points[i + 3] - points[i];
