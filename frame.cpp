@@ -14,6 +14,7 @@ Frame::Frame(QWidget *parent) :
     perspectiveView(false),
     Scale(1), toMove(0),
     ui(new Ui::Frame) {
+    toMove.z = 100;
     ui->setupUi(this);
 }
 
@@ -100,12 +101,14 @@ void Frame::paintEvent(QPaintEvent*) {
 
     int size = points.size();
 
+
     for (int i = 0; i < size; i++) {
 
         if(perspectiveView) {
-            points[i].x *= Scale.x;
-            points[i].y *= Scale.y;
-            points[i].z *= Scale.z;
+
+            points[i].x *= (Scale.x * toMove.z / 100);
+            points[i].y *= (Scale.y * toMove.z / 100);
+            points[i].z *= (Scale.z * toMove.z / 100);
             points[i] = ResMatrix * points[i];
 
             points[i] = toCheck * points[i];
@@ -118,35 +121,15 @@ void Frame::paintEvent(QPaintEvent*) {
         }
         else {
              points[i] = SMatrix * points[i];
+             points[i].x *= (toMove.z / 100);
+             points[i].y *= (toMove.z / 100);
+             points[i].z *= (toMove.z / 100);
              points[i] = ResMatrix * points[i];
         }
 
         points[i] = points[i] + ToCenter;
         points[i] = points[i] + toMove;
 }
-
-    /*for (int i = 0; i < size; i++) {
-        // Res * S * d = ok
-        // S * Res * d != ok
-        if(perspectiveView) {
-            points[i] = ResMatrix * points[i];
-
-            points[i] = toCheck * points[i];
-            points[i].x = points[i].x / points[i].t;
-            points[i].y = points[i].y / points[i].t;
-
-            points[i].x *= K;
-            points[i].y *= K;
-            points[i].z *= K;
-        }
-        else {
-             points[i] = SMatrix * points[i];
-             points[i] = ResMatrix * points[i];
-        }
-
-        points[i] = points[i] + ToCenter;
-        points[i] = points[i] + toMove;
-} */
 
     n = VectorComposition(points[5] - points[4], points[1] - points[0]);
     if(ScalarComposition(n, k) >= 0)
@@ -236,6 +219,11 @@ void Frame::on_UpDown_sliderMoved(int position) {
     repaint();
 }
 
+void Frame::on_zoom_sliderMoved(int position) {
+    toMove.z = (double)position;
+    repaint();
+}
+
 void Frame::on_axleVisible_toggled(bool checked) {
     if(checked)
         axleVisible = true;
@@ -249,3 +237,5 @@ void Frame::on_perspectiveView_toggled(bool checked) {
     else perspectiveView = false;
     repaint();
 }
+
+

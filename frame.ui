@@ -19,6 +19,13 @@
    </property>
    <item row="0" column="1">
     <layout class="QGridLayout" name="gridLayout_2">
+     <item row="3" column="5">
+      <widget class="QPushButton" name="exitButton">
+       <property name="text">
+        <string>exit</string>
+       </property>
+      </widget>
+     </item>
      <item row="1" column="2">
       <widget class="QSlider" name="UpDown">
        <property name="minimumSize">
@@ -43,6 +50,54 @@
         <enum>Qt::Horizontal</enum>
        </property>
       </widget>
+     </item>
+     <item row="1" column="4">
+      <widget class="QSpinBox" name="ScaleY">
+       <property name="minimum">
+        <number>1</number>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="4">
+      <widget class="QSpinBox" name="ScaleZ">
+       <property name="minimum">
+        <number>1</number>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="5">
+      <widget class="QCheckBox" name="perspectiveView">
+       <property name="text">
+        <string>perspective</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="5">
+      <widget class="QCheckBox" name="checkBox">
+       <property name="text">
+        <string>visible</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="4">
+      <widget class="QSpinBox" name="ScaleX">
+       <property name="minimum">
+        <number>1</number>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
      </item>
      <item row="0" column="2">
       <widget class="QSlider" name="LeftRight">
@@ -69,40 +124,6 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="0">
-      <spacer name="horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item row="0" column="4">
-      <widget class="QSpinBox" name="ScaleX">
-       <property name="minimum">
-        <number>1</number>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="4">
-      <widget class="QSpinBox" name="ScaleY">
-       <property name="minimum">
-        <number>1</number>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="4">
-      <widget class="QSpinBox" name="ScaleZ">
-       <property name="minimum">
-        <number>1</number>
-       </property>
-      </widget>
-     </item>
      <item row="1" column="5">
       <widget class="QCheckBox" name="axleVisible">
        <property name="text">
@@ -110,24 +131,19 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="5">
-      <widget class="QCheckBox" name="perspectiveView">
-       <property name="text">
-        <string>perspective</string>
+     <item row="2" column="2">
+      <widget class="QSlider" name="zoom">
+       <property name="minimum">
+        <number>0</number>
        </property>
-      </widget>
-     </item>
-     <item row="0" column="5">
-      <widget class="QCheckBox" name="checkBox">
-       <property name="text">
-        <string>visible</string>
+       <property name="maximum">
+        <number>200</number>
        </property>
-      </widget>
-     </item>
-     <item row="3" column="5">
-      <widget class="QPushButton" name="exitButton">
-       <property name="text">
-        <string>exit</string>
+       <property name="value">
+        <number>100</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
        </property>
       </widget>
      </item>

@@ -54,6 +54,7 @@ private slots:
     void on_UpDown_sliderMoved(int position);
     void on_axleVisible_toggled(bool checked);
     void on_perspectiveView_toggled(bool checked);
+    void on_zoom_sliderMoved(int position);
 };
 
 #endif // FRAME_H
